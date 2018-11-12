@@ -1,0 +1,140 @@
+/*
+ * Licensed to Elasticsearch under one or more contributor
+ * license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright
+ * ownership. Elasticsearch licenses this file to you under
+ * the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+buildscript {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+  }
+
+  dependencies {
+    classpath "org.elasticsearch.gradle:build-tools:${elasticsearchVersion}"
+  }
+}
+
+group = "org.elasticsearch.plugin.store"
+version = "1.0.0"
+
+apply plugin: "java"
+apply plugin: "idea"
+apply plugin: "elasticsearch.esplugin"
+
+check.dependsOn.remove(test)
+tasks.remove(test)
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+esplugin {
+  name "native-unix-store"
+  description "A store using native Unix system calls and options (mmap() with madvise(), open() with O_DIRECT) to use the system cache more efficiently"
+  classname "fr.micq.elasticsearch.NativeUnixStorePlugin"
+}
+
+licenseHeaders {
+  approvedLicenses = ["Apache", "Generated", "Michaël"]
+}
+
+licenseFile = rootProject.file("LICENSE.txt")
+noticeFile = rootProject.file("NOTICE.txt")
+
+dependencies {
+  implementation "org.elasticsearch:elasticsearch:${elasticsearchVersion}"
+  implementation project(":unsafe-tools")
+  testCompile "org.elasticsearch.test:framework:${elasticsearchVersion}"
+}
+
+// Workaround for https://github.com/elastic/elasticsearch/issues/31324
+task testRandom(overwrite: true, type: com.carrotsearch.gradle.junit4.RandomizedTestingTask) {
+  classpath = sourceSets.test.runtimeClasspath
+  //testClassesDir = sourceSets.test.output.classesDir
+  // for Gradle 5.x
+  testClassesDirs = sourceSets.test.output
+  systemProperty "java.library.path", rootProject.file("src/main/packaging/native")
+  systemProperty "java.security.policy", rootProject.file("src/main/plugin-metadata/plugin-security.policy")
+  systemProperty "tests.gradle", true
+  // We must avoid "/tmp" which can be mounted as tmpfs and therefore incompatible with direct I/O 
+  systemProperty "java.io.tmpdir", file("${buildDir}/testrun/temp")
+  // Stdout
+  testLogging {
+      outputs.upToDateWhen {false}
+      outputMode "always"
+  }
+  // More memory for direct buffers used by direct IO tests
+  jvmArgs = ["-XX:MaxDirectMemorySize=1024m","--illegal-access=debug"]
+  include "**/unit/*.class"
+  dependsOn ":unsafe-tools:assemble"
+  dependsOn "testClasses"
+}
+
+task copyJavaLibs(type: Copy) {
+  doFirst {
+    mkdir file("src/main/packaging")
+  }
+  from project(":unsafe-tools").file("build/libs/unsafe-tools.jar")
+  into file("src/main/packaging")
+  dependsOn ":unsafe-tools:assemble"
+}
+
+task copyNativeLibs(type: Copy) {
+  doFirst {
+    mkdir file("src/main/packaging/native")
+  }
+  from project(":unsafe-tools").file("build/libs/directio/shared/libdirectio.so")
+  from project(":unsafe-tools").file("build/libs/mappedmemory/shared/libmappedmemory.so")
+  into file("src/main/packaging/native")
+  dependsOn ":unsafe-tools:assemble"
+}
+
+bundlePlugin {
+  dependsOn "copyJavaLibs"
+  dependsOn "copyNativeLibs"
+}
+
+assemble {
+  dependsOn "bundlePlugin"
+}
+
+check {
+  dependsOn "testRandom"
+}
+
+// Allow Unsafe and native libraries
+forbiddenApisMain.enabled = false
+forbiddenApisTest.enabled = false
+
+integTest.enabled = true
+
+integTestRunner {
+  include "**/integ/*.class"
+}
+
+integTestCluster {
+  systemProperty "java.library.path", "./plugins/${name}/native"
+}
+
+task cleanPackaging(type: Delete) {
+  delete file("src/main/packaging")
+}
+
+clean {
+  dependsOn "cleanPackaging"
+}
+

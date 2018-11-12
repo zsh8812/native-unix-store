@@ -1,0 +1,11 @@
+grant {
+  permission java.lang.RuntimePermission "loadLibrary.directio";
+  permission java.lang.RuntimePermission "loadLibrary.mappedmemory";
+  permission java.lang.RuntimePermission "accessClassInPackage.sun.misc"; // Unsafe Java 8
+  permission java.lang.RuntimePermission "accessClassInPackage.jdk.internal.ref"; // Unsafe Java 9+
+  permission java.lang.RuntimePermission "accessDeclaredMembers";
+  permission java.lang.RuntimePermission "writeFileDescriptor";
+  permission java.lang.RuntimePermission "readFileDescriptor";
+  permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+};
+
