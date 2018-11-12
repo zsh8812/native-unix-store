@@ -78,7 +78,8 @@ task testRandom(overwrite: true, type: com.carrotsearch.gradle.junit4.Randomized
       outputMode "always"
   }
   // More memory for direct buffers used by direct IO tests
-  jvmArgs = ["-XX:MaxDirectMemorySize=1024m","--illegal-access=debug"]
+  //jvmArgs = ["-XX:MaxDirectMemorySize=1024m","--illegal-access=debug"]
+  jvmArgs = ["-XX:MaxDirectMemorySize=1024m"]
   include "**/unit/*.class"
   dependsOn ":unsafe-tools:assemble"
   dependsOn "testClasses"
