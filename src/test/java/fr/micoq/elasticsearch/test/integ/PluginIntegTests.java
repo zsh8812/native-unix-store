@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.micq.elasticsearch.test.integ;
+package fr.micoq.elasticsearch.test.integ;
 
 import java.io.IOException;
 import java.util.Date;
@@ -33,7 +33,7 @@ import org.elasticsearch.test.hamcrest.ElasticsearchAssertions;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
-import fr.micq.elasticsearch.NativeUnixStorePlugin;
+import fr.micoq.elasticsearch.NativeUnixStorePlugin;
 
 @ESIntegTestCase.ClusterScope(scope=ESIntegTestCase.Scope.SUITE, numDataNodes=1)
 @RunWith(com.carrotsearch.randomizedtesting.RandomizedRunner.class)

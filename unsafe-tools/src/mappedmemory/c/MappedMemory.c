@@ -34,21 +34,21 @@
 #include <unistd.h>    // getpagesize, close
 
 /*
- * Class:     fr_micq_unsafe_MappedMemory
+ * Class:     fr_micoq_unsafe_MappedMemory
  * Method:    pageSize
  * Signature: ()V
  */
-JNIEXPORT jint JNICALL Java_fr_micq_unsafe_MappedMemory_pageSize(JNIEnv *env, jclass _ignore)
+JNIEXPORT jint JNICALL Java_fr_micoq_unsafe_MappedMemory_pageSize(JNIEnv *env, jclass _ignore)
 {
   return getpagesize();
 }
 
 /*
- * Class:     fr_micq_unsafe_MappedMemory
+ * Class:     fr_micoq_unsafe_MappedMemory
  * Method:    fadvise
  * Signature: (Ljava/io/FileDescriptor;JJI)V
  */
-JNIEXPORT jint JNICALL Java_fr_micq_unsafe_MappedMemory_fadvise(JNIEnv *env, jclass _ignore, jobject fileDescriptor, jlong offset, jlong length, jint advice)
+JNIEXPORT jint JNICALL Java_fr_micoq_unsafe_MappedMemory_fadvise(JNIEnv *env, jclass _ignore, jobject fileDescriptor, jlong offset, jlong length, jint advice)
 {
   jclass class_ioex, class_fdesc;
   
@@ -102,11 +102,11 @@ JNIEXPORT jint JNICALL Java_fr_micq_unsafe_MappedMemory_fadvise(JNIEnv *env, jcl
 
  
 /*
- * Class:     fr_micq_unsafe_MappedMemory
+ * Class:     fr_micoq_unsafe_MappedMemory
  * Method:    madvise
  * Signature: (JJI)V
  */
-JNIEXPORT jint JNICALL Java_fr_micq_unsafe_MappedMemory_madvise(JNIEnv *env, jclass _ignore, jlong addr, jlong length, jint advice)
+JNIEXPORT jint JNICALL Java_fr_micoq_unsafe_MappedMemory_madvise(JNIEnv *env, jclass _ignore, jlong addr, jlong length, jint advice)
 {
   size_t size = (size_t) length;
 
@@ -157,11 +157,11 @@ JNIEXPORT jint JNICALL Java_fr_micq_unsafe_MappedMemory_madvise(JNIEnv *env, jcl
 }
 
 /*
- * Class:     fr_micq_unsafe_MappedMemory
+ * Class:     fr_micoq_unsafe_MappedMemory
  * Method:    unmap
  * Signature: (JJ)I;
  */
-JNIEXPORT jint JNICALL Java_fr_micq_unsafe_MappedMemory_munmap(JNIEnv *env, jclass _ignore, jlong address, jlong len)
+JNIEXPORT jint JNICALL Java_fr_micoq_unsafe_MappedMemory_munmap(JNIEnv *env, jclass _ignore, jlong address, jlong len)
 {
   if (munmap((void *)address, (size_t)len) == -1) {
     jclass class_ioex = (*env)->FindClass(env, "java/io/IOException");
@@ -175,11 +175,11 @@ JNIEXPORT jint JNICALL Java_fr_micq_unsafe_MappedMemory_munmap(JNIEnv *env, jcla
 }
 
 /*
- * Class:     fr_micq_unsafe_MappedMemory
+ * Class:     fr_micoq_unsafe_MappedMemory
  * Method:    closeDescriptor
  * Signature: (Ljava/io/FileDescriptor;)V
  */
-JNIEXPORT jint JNICALL Java_fr_micq_unsafe_MappedMemory_closeDescriptor(JNIEnv *env, jclass _ignore, jobject fileDescriptor)
+JNIEXPORT jint JNICALL Java_fr_micoq_unsafe_MappedMemory_closeDescriptor(JNIEnv *env, jclass _ignore, jobject fileDescriptor)
 {
   int fd;
   jfieldID field_fd;
@@ -213,11 +213,11 @@ JNIEXPORT jint JNICALL Java_fr_micq_unsafe_MappedMemory_closeDescriptor(JNIEnv *
 }
  
 /*
- * Class:     fr_micq_unsafe_MappedMemory
+ * Class:     fr_micoq_unsafe_MappedMemory
  * Method:    mapFile
- * Signature: (Ljava/lang/String;)Lfr/micq/unsafe/MappedMemory;
+ * Signature: (Ljava/lang/String;)Lfr/micoq/unsafe/MappedMemory;
  */
-JNIEXPORT jobject JNICALL Java_fr_micq_unsafe_MappedMemory_mapFile(JNIEnv *env, jclass _ignore, jstring filename)
+JNIEXPORT jobject JNICALL Java_fr_micoq_unsafe_MappedMemory_mapFile(JNIEnv *env, jclass _ignore, jstring filename)
 {
   int fd;
   char *fname;
@@ -270,7 +270,7 @@ JNIEXPORT jobject JNICALL Java_fr_micq_unsafe_MappedMemory_mapFile(JNIEnv *env, 
     return NULL;
   }
   
-  class_mapped_mem = (*env)->FindClass(env, "fr/micq/unsafe/MappedMemory");
+  class_mapped_mem = (*env)->FindClass(env, "fr/micoq/unsafe/MappedMemory");
   if (class_mapped_mem == NULL) {
     close(fd);
     return NULL;

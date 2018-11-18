@@ -29,11 +29,11 @@
 #include <sys/stat.h>  // constants for open
 
 /*
- * Class:     fr_micq_unsafe_DirectIO
+ * Class:     fr_micoq_unsafe_DirectIO
  * Method:    openDirect
  * Signature: (Ljava/lang/String;Z)Ljava/io/FileDescriptor;
  */
-JNIEXPORT jobject JNICALL Java_fr_micq_unsafe_DirectIO_openDirect(JNIEnv *env, jclass _ignore, jstring filename, jboolean readOnly)
+JNIEXPORT jobject JNICALL Java_fr_micoq_unsafe_DirectIO_openDirect(JNIEnv *env, jclass _ignore, jstring filename, jboolean readOnly)
 {
   jfieldID field_fd;
   jmethodID const_fdesc;

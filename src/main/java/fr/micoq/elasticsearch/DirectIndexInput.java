@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.micq.elasticsearch;
+package fr.micoq.elasticsearch;
 
 import java.io.EOFException;
 import java.io.FileInputStream;
@@ -31,8 +31,8 @@ import java.util.LinkedList;
 import org.apache.lucene.store.BufferedIndexInput;
 import org.apache.lucene.store.IndexInput;
 
-import fr.micq.unsafe.DirectBufferTools;
-import fr.micq.unsafe.DirectIO;
+import fr.micoq.unsafe.DirectBufferTools;
+import fr.micoq.unsafe.DirectIO;
 
 final class DirectIndexInput extends IndexInput {
 

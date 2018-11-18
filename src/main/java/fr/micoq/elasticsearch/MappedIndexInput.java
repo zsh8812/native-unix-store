@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.micq.elasticsearch;
+package fr.micoq.elasticsearch;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -21,7 +21,7 @@ import java.io.IOException;
 import org.apache.lucene.store.IndexInput;
 import org.apache.lucene.store.RandomAccessInput;
 
-import fr.micq.unsafe.MappedMemory;
+import fr.micoq.unsafe.MappedMemory;
 
 public class MappedIndexInput extends IndexInput implements RandomAccessInput {
   private MappedMemory memory;

@@ -45,7 +45,7 @@ targetCompatibility = 1.8
 esplugin {
   name "native-unix-store"
   description "A store using native Unix system calls and options (mmap() with madvise(), open() with O_DIRECT) to use the system cache more efficiently"
-  classname "fr.micq.elasticsearch.NativeUnixStorePlugin"
+  classname "fr.micoq.elasticsearch.NativeUnixStorePlugin"
 }
 
 licenseHeaders {

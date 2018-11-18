@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.micq.elasticsearch.test.unit;
+package fr.micoq.elasticsearch.test.unit;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -26,8 +26,8 @@ import org.junit.runner.RunWith;
 
 import com.carrotsearch.randomizedtesting.RandomizedRunner;
 
-import fr.micq.elasticsearch.NativeUnixDirectory;
-import fr.micq.elasticsearch.NativeUnixDirectory.ForceIO;
+import fr.micoq.elasticsearch.NativeUnixDirectory;
+import fr.micoq.elasticsearch.NativeUnixDirectory.ForceIO;
 
 /*
  * Tests the directory by using exclusively native mapped memory

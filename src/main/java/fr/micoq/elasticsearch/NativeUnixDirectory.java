@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.micq.elasticsearch;
+package fr.micoq.elasticsearch;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -31,7 +31,7 @@ import org.apache.lucene.store.LockFactory;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.store.FileSwitchDirectory;
 
-import fr.micq.unsafe.MappedMemory;
+import fr.micoq.unsafe.MappedMemory;
 
 public class NativeUnixDirectory extends FSDirectory {
   

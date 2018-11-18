@@ -13,20 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.micq.elasticsearch;
+package fr.micoq.elasticsearch;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 import org.elasticsearch.common.settings.Setting;
 import org.elasticsearch.common.settings.Setting.Property;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.ByteSizeUnit;
 import org.elasticsearch.common.unit.ByteSizeValue;
-import org.elasticsearch.index.IndexModule;
+import org.elasticsearch.index.IndexSettings;
+import org.elasticsearch.index.store.IndexStore;
 import org.elasticsearch.plugins.Plugin;
+import org.elasticsearch.plugins.IndexStorePlugin;
 
-public class NativeUnixStorePlugin extends Plugin {
+
+public class NativeUnixStorePlugin extends Plugin implements IndexStorePlugin {
 
   public static final String STORE_TYPE = "nativeunixfs";
   
@@ -54,9 +61,16 @@ public class NativeUnixStorePlugin extends Plugin {
   public NativeUnixStorePlugin(Settings settings) {
   }
   
-  @Override
+  /*@Override
   public void onIndexModule(IndexModule indexModule) {
     indexModule.addIndexStore(STORE_TYPE, (settings)-> new NativeUnixIndexStore(settings));
+  }*/
+
+  @Override
+  public Map<String, Function<IndexSettings, IndexStore>> getIndexStoreFactories() {
+    final Map<String, Function<IndexSettings, IndexStore>> indexStoreFactories = new HashMap<>(1);
+    indexStoreFactories.put(STORE_TYPE, NativeUnixIndexStore::new);
+    return Collections.unmodifiableMap(indexStoreFactories);
   }
   
   @Override

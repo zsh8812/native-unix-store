@@ -13,20 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.micq.elasticsearch;
+package fr.micoq.elasticsearch;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 
-import fr.micq.unsafe.DirectBufferTools;
-import fr.micq.unsafe.DirectIO;
+import fr.micoq.unsafe.DirectBufferTools;
+import fr.micoq.unsafe.DirectIO;
 
 public final class DirectOutputStream extends OutputStream {
   
@@ -38,6 +40,9 @@ public final class DirectOutputStream extends OutputStream {
   private int bufferSize;
   
   public DirectOutputStream(Path path, int bufferSize) throws IOException {
+    if(Files.exists(path)) {
+      throw new FileAlreadyExistsException(path.toString());
+    }
     try {
       this.fos = AccessController.doPrivileged((PrivilegedExceptionAction<FileOutputStream>) () -> {
         return new FileOutputStream(DirectIO.openDirect(path.toString(), false));

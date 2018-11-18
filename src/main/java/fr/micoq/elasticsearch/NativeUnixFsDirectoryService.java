@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.micq.elasticsearch;
+package fr.micoq.elasticsearch;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -28,7 +28,7 @@ import org.elasticsearch.index.shard.ShardPath;
 import org.elasticsearch.index.store.FsDirectoryService;
 import org.elasticsearch.index.store.IndexStore;
 
-import fr.micq.elasticsearch.NativeUnixDirectory.ForceIO;
+import fr.micoq.elasticsearch.NativeUnixDirectory.ForceIO;
 
 public class NativeUnixFsDirectoryService extends FsDirectoryService {
 
