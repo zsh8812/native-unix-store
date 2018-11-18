@@ -23,26 +23,29 @@ The direct I/O is not enabled by default because it consume a lot of direct memo
 ## Prerequisites
 The plugin needs to be run on Linux x86_64 (Windows and other Un*x are not supported).
 
-The plugin can be run on Java 8 or 10 with the OpenJDK JVM.
+JVM compatilibty:
+* OpenJDK 8
+* OpenJDK 10
+* OpenJDK 11
 
 **Note**: Since the plugin uses internal API like `sun.misc.Unsafe`, the compatibility with other JVMs is not assured.
 
 ## Build
 
 ###  Prerequisites
-You will need the **jdk 10** to run the embedded version of the Gradle wrapper and compile the java classes. **gcc** is required to build the native libraries.
+You will need the **jdk 11** to run the embedded version of the Gradle wrapper and compile the java classes. **gcc** is required to build the native libraries.
 
 On Debian, you can install the required packages with:
 ```
-apt install openjdk-10-jdk gcc
+apt install openjdk-11-jdk gcc
 ```
 
 ### Build the plugin
 Just clone/download the repository and execute this command at the root of the project directory:
 ```
-JAVA_HOME=/usr/lib/jvm/default-java ./gradlew assemble
+JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64 ./gradlew assemble
 ```
-Note: `JAVA_HOME` must be set for the Elasticsearch Gradle plugin
+Note: `JAVA_HOME` must be set for the Elasticsearch Gradle plugin. 
 
 The plugin zip file will be created in `native-unix-store/build/distributions`
 
@@ -147,13 +150,13 @@ The embedded tests uses the framework provided by Elasticsearch and Lucene.
 ### Unit tests
 To run the embedded unit tests, use this command:
 ```
-JAVA_HOME=/usr/lib/jvm/default-java ./gradlew testRandom
+JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64 ./gradlew testRandom
 ```
 
 ###  Integration tests
 To run the embedded integration tests, use this command:
 ```
-JAVA_HOME=/usr/lib/jvm/default-java ./gradlew integTest
+JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64 ./gradlew integTest
 ```
 
 ## Issues
