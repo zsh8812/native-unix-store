@@ -19,11 +19,12 @@ import org.elasticsearch.index.IndexSettings;
 import org.elasticsearch.index.shard.ShardPath;
 import org.elasticsearch.index.store.DirectoryService;
 import org.elasticsearch.index.store.IndexStore;
+import org.elasticsearch.index.store.IndexStoreConfig;
 
 public class NativeUnixIndexStore extends IndexStore {
 
-  public NativeUnixIndexStore(IndexSettings indexSettings) {
-    super(indexSettings);
+  public NativeUnixIndexStore(IndexSettings indexSettings, IndexStoreConfig indexStoreConfig) {
+    super(indexSettings, indexStoreConfig);
   }
   
   @Override

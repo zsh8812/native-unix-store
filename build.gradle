@@ -49,8 +49,8 @@ licenseHeaders {
   approvedLicenses = ["Apache", "Generated", "Michaël"]
 }
 
-licenseFile = rootProject.file("LICENSE.txt")
-noticeFile = rootProject.file("NOTICE.txt")
+//licenseFile = rootProject.file("LICENSE.txt")
+//noticeFile = rootProject.file("NOTICE.txt")
 
 dependencies {
   implementation "org.elasticsearch:elasticsearch:${elasticsearchVersion}"
@@ -61,9 +61,9 @@ dependencies {
 // Workaround for https://github.com/elastic/elasticsearch/issues/31324
 task testRandom(overwrite: true, type: com.carrotsearch.gradle.junit4.RandomizedTestingTask) {
   classpath = sourceSets.test.runtimeClasspath
-  //testClassesDir = sourceSets.test.output.classesDir
+  testClassesDir = sourceSets.test.output.classesDir
   // for Gradle 5.x
-  testClassesDirs = sourceSets.test.output
+  //testClassesDirs = sourceSets.test.output
   systemProperty "java.library.path", rootProject.file("src/main/packaging/native")
   systemProperty "java.security.policy", rootProject.file("src/main/plugin-metadata/plugin-security.policy")
   systemProperty "tests.gradle", true
@@ -124,7 +124,7 @@ integTestRunner {
 }
 
 integTestCluster {
-  systemProperty "java.library.path", "./plugins/${name}/native"
+  systemProperty "java.library.path", "../elasticsearch-${elasticsearchVersion}/plugins/${name}/native"
 }
 
 task cleanPackaging(type: Delete) {
