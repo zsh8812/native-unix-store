@@ -17,13 +17,11 @@
 apply plugin: "c"
 apply plugin: "java"
 
-compileJava {
-  // Allow buffer classes to be visible (If compiled with Java 9+)
-  options.compilerArgs.addAll(['--add-exports', 'java.base/sun.nio.ch=ALL-UNNAMED'])
-}
-
 check.dependsOn.remove(test)
 tasks.remove(test)
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 model {
   platforms {
