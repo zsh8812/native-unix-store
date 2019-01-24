@@ -25,8 +25,9 @@ import java.nio.file.Path;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import java.util.Deque;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.lucene.store.BufferedIndexInput;
 import org.apache.lucene.store.IndexInput;
@@ -46,11 +47,11 @@ final class DirectIndexInput extends IndexInput {
   private long bufferPos;
   private ByteBuffer buffer;
   
-  private Deque<DirectIndexInput> clones;
+  private List<DirectIndexInput> clones;
   
   DirectIndexInput(Path path, int bufferSize) throws IOException {
     super("DirectIndexInput(path=\"" + path + "\")");
-    this.clones = new LinkedList<DirectIndexInput>();
+    this.clones = Collections.synchronizedList(new LinkedList<DirectIndexInput>());
     try {
       this.fis = AccessController.doPrivileged((PrivilegedExceptionAction<FileInputStream>) () -> {
         return new FileInputStream(DirectIO.openDirect(path.toString(), true));
