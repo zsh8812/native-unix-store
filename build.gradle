@@ -125,6 +125,7 @@ integTestRunner {
 
 integTestCluster {
   systemProperty "java.library.path", "../elasticsearch-${elasticsearchVersion}/plugins/${name}/native"
+  setting "network.bind_host", "127.0.0.1"
 }
 
 task cleanPackaging(type: Delete) {

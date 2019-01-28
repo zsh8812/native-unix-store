@@ -18,6 +18,7 @@ package fr.micoq.elasticsearch;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Set;
+import java.util.Arrays;
 import java.util.HashSet;
 
 import org.apache.lucene.store.Directory;
@@ -50,7 +51,9 @@ public class NativeUnixDirectory extends FSDirectory {
   private final long maxBytesPreload;
   private final Directory delegate;
   private final Set<String> preLoadExtensions;
-
+  
+  private static final Set<String> directExcludedExtensions = new HashSet<String>(Arrays.asList("fnm","fdt","fdx")) ;
+  
   public NativeUnixDirectory(Path path) throws IOException {
     this(path, FSLockFactory.getDefault());
   }
@@ -126,6 +129,10 @@ public class NativeUnixDirectory extends FSDirectory {
   private IndexOutput makeDirectIndexOutput(Path path) throws IOException {
     return new DirectIndexOutput(path, this.directWriteBufferSize); 
   }
+  
+  private long getFileSize(Path path) {
+  	return path.toFile().length();
+  }
 
   @Override
   public IndexInput openInput(String name, IOContext context) throws IOException {
@@ -137,23 +144,28 @@ public class NativeUnixDirectory extends FSDirectory {
     else if(this.forceIO == ForceIO.MappedMemory)
       return makeMappedIndexInput(path);
     else if(context.context == Context.READ && !context.readOnce) {
-      // Search operations which need file cache
+      // Search operations needs to be cached
       if(this.mappedMemory) {
         return makeMappedIndexInput(path);
       } else {
         return delegate.openInput(name, context);
       }
     }
-    else if(!(context.context == Context.MERGE && context.mergeInfo.estimatedMergeBytes < this.minBytesDirect)) {
+    else if(context.context == Context.MERGE && context.mergeInfo.estimatedMergeBytes >= this.minBytesDirect) {
       if(this.directReadEnabled) {
         return makeDirectIndexInput(path);
       } else {
         return delegate.openInput(name, context);
       }
     }
-    else {
-      return delegate.openInput(name, context);
+    else if(getFileSize(path) >= this.minBytesDirect) {
+    	if(this.directReadEnabled) {
+        return makeDirectIndexInput(path);
+      } else {
+        return delegate.openInput(name, context);
+      }
     }
+    return delegate.openInput(name, context);
   }
   
   @Override
@@ -162,14 +174,31 @@ public class NativeUnixDirectory extends FSDirectory {
     Path path = this.getDirectory().resolve(name);
     if(this.forceIO == ForceIO.Direct)
       return makeDirectIndexOutput(path);
-    else if(!(context.context == Context.MERGE && context.mergeInfo.estimatedMergeBytes < this.minBytesDirect)) {
+    else if(context.context == Context.MERGE && context.mergeInfo.estimatedMergeBytes >= this.minBytesDirect) {
       if(this.directWriteEnabled) {
         return makeDirectIndexOutput(path);
       } else {
         return delegate.createOutput(name, context);
       }
-    } else {
-      return delegate.createOutput(name, context);
     }
+    else if(context.context == Context.DEFAULT) {
+    	/*
+    	 * TODO
+    	 * Since shard restoration uses Context.DEFAULT, we would like to use direct writes here.
+    	 * But stored fields and fields infos (fdx/fdt/fnm) are written with the same context so
+    	 * we choose to exclude them.
+    	 */
+    	if(directExcludedExtensions.contains(FileSwitchDirectory.getExtension(name))) {
+    		return delegate.createOutput(name, context);
+    	}
+    	else {
+    		if(this.directWriteEnabled) {
+          return makeDirectIndexOutput(path);
+        } else {
+          return delegate.createOutput(name, context);
+        }
+    	}
+    }
+    return delegate.createOutput(name, context);
   }
 }

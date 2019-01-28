@@ -51,6 +51,9 @@ final class DirectIndexInput extends IndexInput {
   
   DirectIndexInput(Path path, int bufferSize) throws IOException {
     super("DirectIndexInput(path=\"" + path + "\")");
+    /* Synchronized collection is needed since multiple threads can concurrently
+     * clone a single backend (in case of chained clones).
+     */
     this.clones = Collections.synchronizedList(new LinkedList<DirectIndexInput>());
     try {
       this.fis = AccessController.doPrivileged((PrivilegedExceptionAction<FileInputStream>) () -> {
