@@ -26,7 +26,7 @@ import java.security.PrivilegedAction;
 /*
  * a true 64 (63 :p) bits memory-mapped file with madvise capacity
  */
-public class MappedMemory implements Closeable {
+public class MappedMemory implements Closeable, AutoCloseable {
     
   public static final int MADV_NORMAL = 0;
   public static final int MADV_SEQUENTIAL = 1;
@@ -157,11 +157,6 @@ public class MappedMemory implements Closeable {
       // ignore
     }
     this.closed = true;
-  }
-  
-  @Override
-  public void finalize() {
-    this.close();
   }
 
   public long getLength() {

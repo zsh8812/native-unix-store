@@ -19,7 +19,7 @@ apply plugin: "java"
 
 compileJava {
   // Allow buffer classes to be visible (If compiled with Java 9+)
-  options.compilerArgs.addAll(['--add-exports', 'java.base/sun.nio.ch=ALL-UNNAMED'])
+  options.compilerArgs.addAll(['--add-exports', 'java.base/sun.nio.ch=ALL-UNNAMED', '-Xlint:deprecation'])
 }
 
 check.dependsOn.remove(test)
@@ -31,7 +31,7 @@ model {
       architecture "x86_64"
     }
   }
-	components {
+  components {
     directio(NativeLibrarySpec) {
       //targetPlatform "x64"
       binaries.all {
